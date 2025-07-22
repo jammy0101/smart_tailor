@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../resources/Colors/colors.dart';
-
 import '../../resources/constants/customTextFieldEmail.dart';
 import '../../resources/constants/customTextFieldPassword.dart';
 import '../../resources/round_button/roundButton.dart';
@@ -19,172 +17,202 @@ class LoginScreen extends StatefulWidget {
 
 final FirebaseServices firebaseServices = Get.find<FirebaseServices>();
 
-
 class _LoginScreenState extends State<LoginScreen> {
-  final  formKey2 = GlobalKey<FormState>();
-  //For Login
+  final formKey2 = GlobalKey<FormState>();
+
   final TextEditingController emailControllerL = TextEditingController();
   final TextEditingController passwordControllerL = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 50),
-                child: Row(
-                  children: [
-                    Text(
-                      'WEL'.tr,
-                      style: TextStyle(color: AppColor.blackColor, fontSize: 36),
-                    ),
-                    Text(
-                      'COME BACK!'.tr,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.blackColor,
-                        fontSize: 36,
-                        fontFamily: 'SourceSans3',
-                        wordSpacing: 2,
-                        letterSpacing: 2.3,
-                      ),
-                    ),
-                  ],
+              const SizedBox(height: 20),
+              Center(
+                child: Image.asset(
+                  'assets/images/book3.png',
+                  height: 120,
+                  width: 120,
                 ),
               ),
+              const SizedBox(height: 16),
+              const Text(
+                'Log in to your Account',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+              const Text(
+                'Welcome back, please enter your details',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 24),
               Form(
                 key: formKey2,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Email Address'),
                     CustomTextFieldEmail(
                       controller: emailControllerL,
-                      hintText: 'Enter the email'.tr,
+                      hintText: ''.tr,
                       validator: validateEmail,
                     ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                      child: Obx(() {
-                        return CustomTextField(
-                          controller: passwordControllerL,
-                          obscureText: !firebaseServices.isPasswordVisibleL.value,
-                          hintText: 'Enter the Password'.tr,
-                          suffixIcon: IconButton(
-                            onPressed: firebaseServices.togglePasswordVisibilityL,
-                            icon: Icon(
-                              firebaseServices.isPasswordVisibleL.value
-                                  ? Icons.visibility
-                                  : Icons.visibility_off_outlined,
-                            ),
+                    const SizedBox(height: 16),
+                    const Text('Password'),
+                    Obx(() {
+                      return CustomTextField(
+                        controller: passwordControllerL,
+                        obscureText: !firebaseServices.isPasswordVisibleL.value,
+                        hintText: ''.tr,
+                        suffixIcon: IconButton(
+                          onPressed: firebaseServices.togglePasswordVisibilityL,
+                          icon: Icon(
+                            firebaseServices.isPasswordVisibleL.value
+                                ? Icons.visibility
+                                : Icons.visibility_off_outlined,
                           ),
-                          validator: validatePassword,
-                        );
-                      }),
-                    ),
+                        ),
+                        validator: validatePassword,
+                      );
+                    }),
                   ],
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    children: [
+                      Obx(() {
+                        return Checkbox(
+                          value: firebaseServices.loading.value,
+                          onChanged: (value) {
+                            firebaseServices.loading.value = value!;
+                          },
+                        );
+                      }),
+                      const Text('Remember me'),
+                    ],
+                  ),
                   TextButton(
                     onPressed: () {
-                      //About forgot password
+                      Get.toNamed(RoutesName.forgotPassword);
                     },
-                    child: Text(
-                      'Forgot password'.tr,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 21,
-                      ),
+                    child: const Text(
+                      'Forgot password?',
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
                     ),
-                  ),
+                  )
                 ],
               ),
-              SizedBox(height: 6,),
+              const SizedBox(height: 12),
               Obx(() {
                 return RoundButton(
-                  width: 377,
-                  height: 60,
+                  width: double.infinity,
+                  height: 55,
                   title: 'Login'.tr,
                   loading: firebaseServices.loadingLoginL.value,
-                  onPress: (){
-                    if(formKey2.currentState!.validate()){
+                  onPress: () {
+                    if (formKey2.currentState!.validate()) {
                       firebaseServices.login(
                         email: emailControllerL.text.trim(),
                         password: passwordControllerL.text.trim(),
                       );
                     }
                   },
-                  roundButton: AppColor.blackColor,
+                  roundButton: Colors.blueAccent,
                   textColor: AppColor.blackColor,
                 );
               }),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                child: Text('or continue'.tr),
+              const SizedBox(height: 20),
+              Row(
+                children: const [
+                  Expanded(child: Divider()),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text('OR'),
+                  ),
+                  Expanded(child: Divider()),
+                ],
               ),
+              const SizedBox(height: 16),
+              // Obx(() {
+              //   return RoundButton2(
+              //     width: 60,
+              //     height: 60,
+              //     loading: firebaseServices.loadingGoogleL.value,
+              //     title: '',
+              //     onPress: () async {
+              //       await firebaseServices.loginWithGoogle(isRegistration: false);
+              //     },
+              //     textColor: AppColor.blackColor,
+              //     buttonColor2: AppColor.whiteColor,
+              //     child: Image.asset(
+              //       'assets/images/google1.png',
+              //       width: 30,
+              //       height: 30,
+              //     ),
+              //   );
+              // }),
               Obx(() {
-                return  RoundButton2(
-                  width: 377,
+                return RoundButton2(
+                  width: 60,
                   height: 60,
                   loading: firebaseServices.loadingGoogleL.value,
-                  title: 'Google'.tr,
-                  onPress: (){
-                    //Google integration
+                  title: '',
+                  onPress: () async {
+                    await firebaseServices.loginWithGoogle(isRegistration: false);
                   },
                   textColor: AppColor.blackColor,
-                  buttonColor2: AppColor.blueColor,
+                  buttonColor2: AppColor.whiteColor,
+                  child: Image.asset(
+                    'assets/images/google1.png',
+                    width: 30,
+                    height: 30,
+                  ),
                 );
               }),
-              TextButton(
-                onPressed: () {
-                  Get.toNamed(RoutesName.registrationScreen);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?".tr,
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Don't have an account?".tr),
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed(RoutesName.registrationScreen);
+                    },
+                    child: const Text(
+                      ' Signup',
                       style: TextStyle(
-                        fontSize: 22,
-                        color: AppColor.blackColor,
-                      ),
-                    ),
-                    Text(
-                      'Registration'.tr,
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 22,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  )
+                ],
+              )
             ],
           ),
-        ],
+        ),
       ),
     );
   }
+
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return "Email is required".tr;
     }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$');
     if (!emailRegex.hasMatch(value)) {
       return "Enter a valid email".tr;
     }
     return null;
   }
-
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
@@ -195,5 +223,4 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
-
 }

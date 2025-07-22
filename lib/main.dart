@@ -1,30 +1,37 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_tailor/resources/appTranslation/apptranslation.dart';
-import 'firebase_options.dart';
 import 'package:smart_tailor/resources/routes/routes.dart';
 
-void main()async{
+import 'firebase_options.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  String? lang = prefs.getString('selected_lang');
+  Locale locale = lang == "Urdu" ? const Locale('ur', 'PK') : const Locale('en', 'US');
+
+  runApp(MyApp(locale: locale));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Locale locale;
+  const MyApp({super.key, required this.locale});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(),
-      locale: const Locale('en', 'US'), // default
-        fallbackLocale: const Locale('ur', 'PK'),
-      title: 'Flutter Demo',
+      locale: locale,
+      fallbackLocale: const Locale('en', 'US'), // ✅ use safe fallback
+      title: 'Smart Tailor',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
@@ -32,6 +39,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-

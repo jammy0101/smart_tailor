@@ -10,8 +10,10 @@ class FirebaseServices extends GetxController{
 
   final loadingLoginL = false.obs;
   final loadingGoogleL = false.obs;
+  final loadingFacebook = false.obs;
   final loadingRegistration = false.obs;
-  final loadingGoogleRegistration = false.obs;
+  RxBool loadingGoogleRegistration = false.obs;
+  RxBool loading = false.obs;
 
 
 
@@ -36,7 +38,7 @@ class FirebaseServices extends GetxController{
 
 
 
-  //:::::::::::>>LOGIN , REGISTRATION and  GOOGLE FUNCTIONALITY<<::::::::::::
+  //:::::::::::>>LOGIN, REGISTRATION and  GOOGLE FUNCTIONALITY<<::::::::::::
 
   Future<void>  registration({required String email, required String password})async{
     loadingRegistration.value = true;
@@ -46,11 +48,11 @@ class FirebaseServices extends GetxController{
         password: password,
       );
 
-      Get.snackbar("Successfully", 'Registration Completed');
+      Get.snackbar("Successfully".tr, 'Registration Completed'.tr);
       print("User Register : ${userCredential.user!.uid}");
       Get.offAllNamed(RoutesName.homeScreen);
     }catch(e){
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error'.tr, e.toString());
       print("error : $e");
     }finally{
       loadingRegistration.value = false;
@@ -65,23 +67,58 @@ class FirebaseServices extends GetxController{
         password: password,
       );
 
-      Get.snackbar("Successfully", 'Login Completed');
+      Get.snackbar("Successfully".tr, 'Login Completed'.tr);
       print("User Login : ${userCredential.user!.uid}");
       Get.offAllNamed(RoutesName.homeScreen);
     }catch(e){
-      Get.snackbar('Error', e.toString());
-      print("error : $e");
+      Get.snackbar('Error'.tr, e.toString());
+      print("Error : $e");
     }finally{
       loadingLoginL.value = false;
     }
   }
 
-  Future<UserCredential?> loginWithGoogle() async {
-    loadingGoogleL.value = true; // Start loading
+  // Future<UserCredential?> loginWithGoogle() async {
+  //   loadingGoogleRegistration.value = true; // Start loading
+  //   try {
+  //     final googleUser = await GoogleSignIn().signIn();
+  //     if (googleUser == null) {
+  //       Get.snackbar('Cancelled', 'Google sign-in was cancelled');
+  //       return null;
+  //     }
+  //
+  //     final googleAuth = await googleUser.authentication;
+  //
+  //     final cred = GoogleAuthProvider.credential(
+  //       idToken: googleAuth.idToken,
+  //       accessToken: googleAuth.accessToken,
+  //     );
+  //
+  //     final result = await auth.signInWithCredential(cred);
+  //
+  //     Get.snackbar("Success", "Google Sign-in completed");
+  //     Get.offAllNamed(RoutesName.homeScreen);
+  //     return result;
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Google Sign-in failed: $e");
+  //     print("Google login error: $e");
+  //     return null;
+  //   } finally {
+  //     loadingGoogleRegistration.value = false; // Stop loading
+  //   }
+  // }
+
+  Future<UserCredential?> loginWithGoogle({bool isRegistration = false}) async {
+    if (isRegistration) {
+      loadingGoogleRegistration.value = true;
+    } else {
+      loadingGoogleL.value = true;
+    }
+
     try {
       final googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
-        Get.snackbar('Cancelled', 'Google sign-in was cancelled');
+        Get.snackbar('Cancelled'.tr, 'Google sign-in was cancelled'.tr);
         return null;
       }
 
@@ -94,15 +131,19 @@ class FirebaseServices extends GetxController{
 
       final result = await auth.signInWithCredential(cred);
 
-      Get.snackbar("Success", "Google Sign-in completed");
+      Get.snackbar("Success".tr, "Google Sign-in completed".tr);
       Get.offAllNamed(RoutesName.homeScreen);
       return result;
     } catch (e) {
-      Get.snackbar("Error", "Google Sign-in failed: $e");
+      Get.snackbar("Error".tr, "Google Sign-in failed: $e".tr);
       print("Google login error: $e");
       return null;
     } finally {
-      loadingGoogleL.value = false; // Stop loading
+      if (isRegistration) {
+        loadingGoogleRegistration.value = false;
+      } else {
+        loadingGoogleL.value = false;
+      }
     }
   }
 

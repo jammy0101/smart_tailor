@@ -1,5 +1,8 @@
 import 'package:get/get.dart';
+import 'package:smart_tailor/resources/Forgot/SuccessScreen.dart';
+import 'package:smart_tailor/resources/Forgot/emailSentScreen.dart';
 import 'package:smart_tailor/view/chooseLanguageScreen/startScreen.dart';
+import 'package:smart_tailor/view/forgotPassword/forgotPassword.dart';
 import '../../authBinding/authBinding.dart';
 import '../../view/homeScreen/homeScreen.dart';
 import '../../view/loginScreen/loginScreen.dart';
@@ -38,6 +41,27 @@ class AppRoutes {
     GetPage(
       name: RoutesName.chooseLanguage,
       page: () => ChooseLanguageScreen(),
+      transition: Transition.leftToRightWithFade,
+      transitionDuration: const Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.forgotPassword,
+      page: () => ForgotPasswordScreen(),
+      binding: AuthBinding(),
+      transition: Transition.leftToRightWithFade,
+      transitionDuration: const Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.emailSentScreen,
+      page: () => EmailSentScreen(),
+      binding: AuthBinding(),
+      transition: Transition.leftToRightWithFade,
+      transitionDuration: const Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.resetSuccessScreen,
+      page: () => SuccessScreen(),
+      binding: AuthBinding(),
       transition: Transition.leftToRightWithFade,
       transitionDuration: const Duration(milliseconds: 250),
     ),
