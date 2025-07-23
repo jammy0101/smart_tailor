@@ -49,7 +49,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             Get.toNamed(RoutesName.loginScreen);
           },
           icon: Container(
-            height: 35,
+            height: 30,
             width: 35,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -76,7 +76,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     width: size.width * 0.3,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 Center(
                   child: Text(
                     'Create an Account',
@@ -144,7 +144,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     }),
                     const Text('I agree to the '),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+
+                      },
                       child: const Text(
                         'Terms of Service',
                         style: TextStyle(color: Colors.blueAccent),
@@ -152,7 +154,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 Obx(() {
                   return RoundButton(
                     width: double.infinity,
@@ -193,7 +195,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       loading: firebaseServices.loadingGoogleL.value,
                       title: '',
                       onPress: () async {
-                        await firebaseServices.loginWithGoogle(isRegistration: false);
+                        await firebaseServices.loginWithGoogle();
                       },
                       textColor: AppColor.blackColor,
                       buttonColor2: AppColor.whiteColor,

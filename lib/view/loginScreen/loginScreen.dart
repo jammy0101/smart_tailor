@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   loading: firebaseServices.loadingGoogleL.value,
                   title: '',
                   onPress: () async {
-                    await firebaseServices.loginWithGoogle(isRegistration: false);
+                    await firebaseServices.loginWithGoogle();
                   },
                   textColor: AppColor.blackColor,
                   buttonColor2: AppColor.whiteColor,
